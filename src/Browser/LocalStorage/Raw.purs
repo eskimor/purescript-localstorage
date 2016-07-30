@@ -2,6 +2,7 @@ module Browser.LocalStorage.Raw (
   Storage
 , localStorage
 , sessionStorage
+, mkMockStorage
 , EffLocalStorage
 , STORAGE
   ) where
@@ -21,9 +22,11 @@ type EffLocalStorage eff = Eff (storage :: STORAGE | eff)
 
 foreign import data LocalStorage :: *
 foreign import data SessionStorage :: *
+foreign import data MockStorage :: *
 
 foreign import jsLocalStorage :: LocalStorage
 foreign import jsSessionStorage :: SessionStorage
+foreign import jsMkMockStorage :: Unit -> MockStorage
 
 type Storage = {
   length :: forall eff. EffLocalStorage eff Int
@@ -53,6 +56,9 @@ localStorage = mkStorage jsLocalStorage
 
 sessionStorage :: Storage
 sessionStorage = mkStorage jsSessionStorage
+
+mkMockStorage :: Unit -> Storage
+mkMockStorage = mkStorage <<< jsMkMockStorage
 
 
 jsLength :: forall eff storage. storage -> EffLocalStorage eff Int
