@@ -5,6 +5,28 @@
 
 exports.jsLocalStorage = window.localStorage;
 exports.jsSessionStorage = window.sessionStorage;
+exports.jsMkMockStorage = function(){
+  return {
+    length: function(){
+      return Object.keys(this).length;
+    },
+    key: function(num){
+      return Object.keys(this)[num];
+    },
+    getItem: function(str){
+      return this[str];
+    },
+    setItem: function(str,val){
+      this[str] = val;
+    },
+    removeItem: function(str){
+      delete this[str];
+    },
+    clear: function(){
+      Object.keys(this).forEach(this.removeItem, this);
+    }
+  };
+};
 
 exports.jsUnsafeLength = function(storage) {
   return function(){
